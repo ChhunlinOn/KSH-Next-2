@@ -1,0 +1,25 @@
+# services:
+#   vite-app:
+#     build:
+#       context: .
+#       dockerfile: dockerfile
+#     ports:
+#       - "127.0.0.1:3305:80"
+#     container_name: vite-app
+#     restart: unless-stopped
+#     environment:
+#       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    ports:
+      - "3305:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    container_name: ksh-web-app
+    restart: always

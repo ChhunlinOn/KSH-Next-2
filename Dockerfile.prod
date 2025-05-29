@@ -1,0 +1,38 @@
+# Install dependencies only when needed
+FROM node:18-alpine AS deps
+WORKDIR /app
+
+# Install dependencies based on lock file
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+# Rebuild the source code only when needed
+FROM node:18-alpine AS builder
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Build Next.js app using standalone mode
+RUN npm run build
+
+# Production image
+FROM node:18-alpine AS runner
+WORKDIR /app
+
+# Set NODE_ENV to production
+ENV NODE_ENV=production \
+    NEXT_PUBLIC_API_URL=https://ksh-system-be.final25.psewmad.org/api
+
+# If you're using next/image with sharp
+RUN apk add --no-cache libc6-compat
+
+# Copy only necessary files from builder
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./
+
+# Port for Next.js
+EXPOSE 3000
+
+# Run the application
+CMD ["node", "server.js"]
