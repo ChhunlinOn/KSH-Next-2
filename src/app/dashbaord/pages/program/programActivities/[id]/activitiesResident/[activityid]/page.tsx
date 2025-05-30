@@ -120,62 +120,68 @@ const ActivitiesResident = () => {
     );
   }
 
-  const handleSave = async () => {
-    try {
-      const promises = filteredProgramInfo.map(async (program) => {
-        const id = program.id;
-        const currentScore = program.attributes?.score_point?.data?.attributes?.score_point;
-        const currentComment = program.attributes?.description;
+ const handleSave = async () => {
+  try {
+    // Only process items that were actually changed
+    const changedPrograms = filteredProgramInfo.filter((program) => {
+      return program.value !== undefined || program.comment !== undefined;
+    });
 
-        const value = program.value || `${currentScore}%` || "1";
-        const comment = program.comment || currentComment || "";
+    const promises = changedPrograms.map(async (program) => {
+      const id = program.id;
+      const currentScore = program.attributes?.score_point?.data?.attributes?.score_point?.id;
+      const currentComment = program.attributes?.description;
 
-        const score_point = value === "1" ? 1 : value === "3" ? 3 : 2;
+      const value = program.value ?? currentScore;
+      const comment = program.comment ?? currentComment ?? "";
 
-        const response = await fetch(`${api_url}/resident-checklists/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+      const score_point =
+        value === "1" ? 1 : value === "3" ? 3 : value === "4" ? 4 : 2;
+
+      const response = await fetch(`${api_url}/resident-checklists/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          data: {
+            score_point,
+            description: comment,
           },
-          body: JSON.stringify({
-            data: {
-              score_point,
-              description: comment,
-            },
-          }),
-        });
-        console.log("Sending to ID:", id, {
-          score_point,
-          description: comment,
-        });
-
-
-        return response;
+        }),
       });
 
-      const responses = await Promise.all(promises);
-      const allSuccessful = responses.every((res) => res.ok);
+      console.log("Sending to ID:", id, {
+        score_point,
+        description: comment,
+      });
 
-      if (allSuccessful) {
-        toast.success("All residents saved successfully!", {
-          position: "top-center",
-          autoClose: 5000,
-        });
-      } else {
-        toast.error("Some saves may have failed. Please check again.", {
-          position: "top-center",
-          autoClose: 5000,
-        });
-      }
-    } catch (error) {
-      toast.error("Failed to save the data. Please try again.", {
+      return response;
+    });
+
+    const responses = await Promise.all(promises);
+    const allSuccessful = responses.every((res) => res.ok);
+
+    if (allSuccessful) {
+      toast.success("All residents saved successfully!", {
         position: "top-center",
         autoClose: 5000,
       });
-      console.error("Error updating resident-checklists:", error);
+    } else {
+      toast.error("Some saves may have failed. Please check again.", {
+        position: "top-center",
+        autoClose: 5000,
+      });
     }
-  };
+  } catch (error) {
+    toast.error("Failed to save the data. Please try again.", {
+      position: "top-center",
+      autoClose: 5000,
+    });
+    console.error("Error updating resident-checklists:", error);
+  }
+};
 
 
   const handleSearch = () => {

@@ -1,25 +1,19 @@
-# services:
-#   vite-app:
-#     build:
-#       context: .
-#       dockerfile: dockerfile
-#     ports:
-#       - "127.0.0.1:3305:80"
-#     container_name: vite-app
-#     restart: unless-stopped
-#     environment:
-#       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
-
+version: '3.8'
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     ports:
-      - "3305:3000"
+      - "3305:3000" # Map host port 3305 to container port 3000
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NODE_ENV=production
     container_name: ksh-web-app
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
