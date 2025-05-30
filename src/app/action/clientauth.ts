@@ -83,18 +83,18 @@ export async function login(email: string, password: string): Promise<LoginRespo
     }
 
     // Set cookies for server-side access
-    await fetch("/api/session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        jwt,
-        userRole: roleName || "",
-        userImage: profileImage || "",
-        userId,
-      }),
-    });
+    // await fetch("/api/session", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     jwt,
+    //     userRole: roleName || "",
+    //     userImage: profileImage || "",
+    //     userId,
+    //   }),
+    // });
 
     console.log("Client session set:", {
       jwt: typeof window !== "undefined" ? localStorage.getItem("jwt") : null,
