@@ -1,17 +1,12 @@
-// "use client";
-
-import { redirect } from "next/navigation"
-import { getSession } from "./action/clientauth"
+// app/page.js
+import { redirect } from "next/navigation";
+import { getServerSession } from "@/app/action/auth";
 
 export default async function HomePage() {
-  // Check if user is authenticated
-  const session = getSession()
-
-  // Redirect to dashboard if authenticated, otherwise to login
+  const session = await getServerSession();
   if (session) {
-    redirect("/dashbaord/pages/resident") // Fixed the typo here
+    redirect("/dashbaord/pages/resident");
   } else {
-    redirect("/login")
+    redirect("/login");
   }
-  // redirect('/dashbaord/pages/resident');
 }

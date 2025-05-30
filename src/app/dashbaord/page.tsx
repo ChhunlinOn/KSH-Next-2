@@ -1,14 +1,12 @@
-import { getSession } from "../action/auth"
-import ResidentList from "./pages/resident/page"
+// app/dashboard/page.js
+import { getServerSession } from "@/app/action/auth";
 import { redirect } from "next/navigation";
-// import { useUser } from "../Context/Programcontext";
-
+import ResidentList from "./pages/resident/page";
 
 export default async function DashboardPage() {
-  const session = await getSession();
-  if (!session) redirect("/login");
-
-  return (
-    <ResidentList />
-  )
+  const session = await getServerSession();
+  if (!session) {
+    redirect("/login");
+  }
+  return <ResidentList />;
 }

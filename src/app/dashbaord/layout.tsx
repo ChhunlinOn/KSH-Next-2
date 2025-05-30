@@ -1,16 +1,17 @@
+"use client";
 import type React from "react";
 import { redirect } from "next/navigation";
 import { ClientLayoutWrapper } from "../component/layout";
-// import { getSession } from "../action/auth";
+import { getSession } from "../action/clientauth";
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   // Server-side session check
-  // const session = await getSession();
-  // if (!session) redirect("/login");
+  const session = getSession();
+  if (!session) redirect("/login");
 
   return <ClientLayoutWrapper>{children}</ClientLayoutWrapper>;
 }

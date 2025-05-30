@@ -128,7 +128,7 @@ export function logout() {
     localStorage.removeItem("userId");
   }
 
-  fetch("/api/session", { method: "DELETE" });
+  // fetch("/api/session", { method: "DELETE" });
 
   if (typeof window !== "undefined") {
     window.location.href = "/login";

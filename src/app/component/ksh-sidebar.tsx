@@ -65,8 +65,8 @@ export function KshSidebar() {
     }
   ]
 
-  const handleSignOut = async () => {
-    await logout()
+  const handleSignOut = () => {
+     logout()
   }
 
   const navigateTo = (path: string) => {

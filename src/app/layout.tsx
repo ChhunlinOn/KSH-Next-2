@@ -1,7 +1,10 @@
+
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+// import { getSession } from "./action/clientauth";
+import { redirect } from "next/navigation";
 
 // Load the Inter font once at the root level
 const inter = Inter({
@@ -22,6 +25,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // Check if user is authenticated
+  // const session = getSession();
+  // // If not authenticated, redirect to login
+  // if (!session) {
+  //   redirect("/login");
+  // }
+    
   return (
     <html lang="en" className={inter.className}>
       <body className="font-sans antialiased">{children}</body>
