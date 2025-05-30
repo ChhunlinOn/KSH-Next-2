@@ -1,143 +1,173 @@
-"use server";
+// import { cookies } from "next/headers";
+// import { redirect } from "next/navigation";
 
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+// type LoginResponse = {
+//   success: boolean;
+//   error?: string;
+//   user?: any;
+//   serverToken?: string;
+// };
 
-type LoginResponse = {
-  success: boolean;
-  error?: string;
-  user?: any;
-};
+// export async function login(email: string, password: string): Promise<LoginResponse> {
+//   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+//   if (!apiUrl) {
+//     console.error("API URL not defined");
+//     return { success: false, error: "API URL not configured" };
+//   }
 
-export async function login(email: string, password: string): Promise<LoginResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!apiUrl) {
-    console.error("API URL not defined");
-    return { success: false, error: "API URL not configured" };
-  }
+//   try {
+//     const loginData = {
+//       identifier: email,
+//       password: password,
+//     };
 
-  try {
-    const loginData = {
-      identifier: email,
-      password: password,
-    };
+//     const response = await fetch(`${apiUrl}/auth/local`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(loginData),
+//       cache: "no-store",
+//       credentials: "include",
+//     });
 
-    const response = await fetch(`${apiUrl}/auth/local`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(loginData),
-      cache: "no-store",
-      credentials: "include",
-    });
+//     const result = await response.json();
 
-    const result = await response.json();
+//     if (!response.ok) {
+//       return {
+//         success: false,
+//         error: result.error?.message || "Login failed",
+//       };
+//     }
 
-    if (!response.ok) {
-      return {
-        success: false,
-        error: result.error?.message || "Login failed",
-      };
-    }
+//     const clientToken = result.jwt;
+//     const userId = result.user.id;
 
-    const jwt = result.jwt;
-    const userId = result.user.id;
+//     const userResponse = await fetch(`${apiUrl}/users/${userId}?populate=role,profile_img`, {
+//       headers: {
+//         Authorization: `Bearer ${clientToken}`,
+//       },
+//       cache: "no-store",
+//       credentials: "include",
+//     });
 
-    const userResponse = await fetch(`${apiUrl}/users/${userId}?populate=role,profile_img`, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-      cache: "no-store",
-      credentials: "include",
-    });
+//     const userResult = await userResponse.json();
 
-    const userResult = await userResponse.json();
+//     if (!userResponse.ok) {
+//       return {
+//         success: false,
+//         error: userResult.error?.message || "Failed to fetch user details",
+//       };
+//     }
 
-    if (!userResponse.ok) {
-      return {
-        success: false,
-        error: userResult.error?.message || "Failed to fetch user details",
-      };
-    }
+//     const roleName = userResult.role?.name;
+//     const profileImage = userResult.profile_img?.formats?.thumbnail?.url || null;
 
-    const roleName = userResult.role?.name;
-    const profileImage = userResult.profile_img?.formats?.thumbnail?.url || null;
+//     const serverTokenResponse = await fetch(`${apiUrl}/auth/server-token`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${clientToken}`,
+//       },
+//       body: JSON.stringify({ userId }),
+//       cache: "no-store",
+//     });
 
-    const cookieStore = await cookies();
+//     const serverTokenResult = await serverTokenResponse.json();
 
-    cookieStore.set("jwt", jwt, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-      sameSite: "lax",
-    });
+//     if (!serverTokenResponse.ok) {
+//       return {
+//         success: false,
+//         error: serverTokenResult.error?.message || "Failed to fetch server token",
+//       };
+//     }
 
-    cookieStore.set("userRole", roleName || "", {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-      sameSite: "lax",
-    });
+//     const serverToken = serverTokenResult.serverToken;
 
-    if (profileImage) {
-      cookieStore.set("userImage", profileImage, {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 7,
-        path: "/",
-        sameSite: "lax",
-      });
-    }
+//     const cookieStore = await cookies();
+//     cookieStore.set("serverToken", serverToken, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       maxAge: 60 * 60 * 24 * 7,
+//       path: "/",
+//       sameSite: "lax",
+//     });
 
-    console.log("Cookies set:", {
-      jwt: cookieStore.get("jwt")?.value,
-      userRole: cookieStore.get("userRole")?.value,
-      userImage: cookieStore.get("userImage")?.value,
-    });
+//     cookieStore.set("userRole", roleName || "", {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       maxAge: 60 * 60 * 24 * 7,
+//       path: "/",
+//       sameSite: "lax",
+//     });
 
-    return {
-      success: true,
-      user: {
-        id: userId,
-        role: roleName,
-        profileImage,
-      },
-    };
-  } catch (error) {
-    console.error("Login error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred",
-    };
-  }
-}
+//     cookieStore.set("userId", userId.toString(), {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       maxAge: 60 * 60 * 24 * 7,
+//       path: "/",
+//       sameSite: "lax",
+//     });
 
-export async function logout() {
-  const cookieStore = await cookies();
-  cookieStore.delete("jwt");
-  cookieStore.delete("userRole");
-  cookieStore.delete("userImage");
-  cookieStore.delete("userName");
-  cookieStore.delete("userId");
-  redirect("/login");
-}
+//     if (profileImage) {
+//       cookieStore.set("userImage", profileImage, {
+//         httpOnly: true,
+//         secure: process.env.NODE_ENV === "production",
+//         maxAge: 60 * 60 * 24 * 7,
+//         path: "/",
+//         sameSite: "lax",
+//       });
+//     }
 
-export async function getSession() {
-  const cookieStore = await cookies();
-  const jwt = cookieStore.get("jwt")?.value;
-  const userRole = cookieStore.get("userRole")?.value;
-  const userImage = cookieStore.get("userImage")?.value;
+//     console.log("Server cookies set:", {
+//       serverToken: cookieStore.get("serverToken")?.value,
+//       userRole: cookieStore.get("userRole")?.value,
+//       userImage: cookieStore.get("userImage")?.value,
+//       userId: cookieStore.get("userId")?.value,
+//     });
 
-  if (!jwt) {
-    return null;
-  }
+//     return {
+//       success: true,
+//       user: {
+//         id: userId,
+//         role: roleName,
+//         profileImage,
+//       },
+//       serverToken,
+//     };
+//   } catch (error) {
+//     console.error("Login error:", error);
+//     return {
+//       success: false,
+//       error: "An unexpected error occurred",
+//     };
+//   }
+// }
 
-  return {
-    jwt,
-    userRole,
-    userImage,
-  };
-}
+// export async function logout() {
+//   const cookieStore = await cookies();
+//   cookieStore.delete("serverToken");
+//   cookieStore.delete("userRole");
+//   cookieStore.delete("userImage");
+//   cookieStore.delete("userId");
+//   redirect("/login");
+// }
+
+// export async function getSession() {
+//   const cookieStore = await cookies();
+//   const serverToken = cookieStore.get("serverToken")?.value;
+//   const userRole = cookieStore.get("userRole")?.value;
+//   const userImage = cookieStore.get("userImage")?.value;
+//   const userId = cookieStore.get("userId")?.value;
+
+//   if (!serverToken) {
+//     return null;
+//   }
+
+//   return {
+//     serverToken,
+//     userRole,
+//     userImage,
+//     userId,
+//   };
+// }

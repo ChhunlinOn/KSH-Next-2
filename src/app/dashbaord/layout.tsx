@@ -1,7 +1,7 @@
 import type React from "react";
 import { redirect } from "next/navigation";
 import { ClientLayoutWrapper } from "../component/layout";
-import { getSession } from "../action/auth";
+// import { getSession } from "../action/auth";
 
 export default async function DashboardLayout({
   children,
@@ -9,8 +9,8 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   // Server-side session check
-  const session = await getSession();
-  if (!session) redirect("/login");
+  // const session = await getSession();
+  // if (!session) redirect("/login");
 
   return <ClientLayoutWrapper>{children}</ClientLayoutWrapper>;
 }

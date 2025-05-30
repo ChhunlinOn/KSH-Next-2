@@ -5,9 +5,9 @@ import { FaPlus, FaEdit, FaTrash, FaTimes } from "react-icons/fa"
 import Link from "next/link"
 import Image from "next/image"
 import { useParams } from "next/navigation"
-import { getSessionForClient } from "@/app/action/clientauth"
+import { getSession } from "@/app/action/clientauth"
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const session = getSessionForClient();
+const session = getSession();
 const TOKEN = session?.jwt;
 
 interface SalaryData {
@@ -45,7 +45,7 @@ export default function SalaryPage() {
   
   const fetchResident = async () => {
     try {
-      const response = await fetch(`${API_URL}/beneficiaries/${id}?populate=*`,
+      const response = await fetch(`${API_URL}/salary-residents/${id}?populate[resident][populate]=*&populate=internship_salaries`,
          {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
@@ -55,13 +55,13 @@ export default function SalaryPage() {
   
       const transformed = {
         id: data.data.id,
-        name: data.data.attributes?.fullname_english || 'No Name',
-        image: data.data.attributes?.profile_img_url?.data?.attributes?.url,
-        dob: data.data.attributes?.date_of_birth,
+        name: data.data.attributes?.resident?.data?.attributes?.fullname_english || 'No Name',
+        image: data.data.attributes?.resident?.data?.attributes?.profile_img_url?.data?.attributes?.url || "No Image URL",
+        dob: data.data.attributes?.resident?.data?.attributes?.date_of_birth,
         salary: data.data.attributes?.internship_salaries.data || [],
       };
   
-      console.log('Fetched residents:', data.data);
+      console.log('Fetched info_salary_residents:', data.data);
       setResident(transformed);
     } catch (error) {
       console.error(error);

@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import BoxResident from '../../../component/medicalBox';
 import { FaPlus, FaTimes, FaSearch } from 'react-icons/fa';
 import dotenv from 'dotenv';
-import { getSessionForClient } from '@/app/action/clientauth';
+import { getSession } from '@/app/action/clientauth';
 
 const MedicalList: React.FC = () => {
   dotenv.config();
   const api_url = process.env.NEXT_PUBLIC_API_URL;
-  const session = getSessionForClient();
+  const session = getSession();
   const token = session?.jwt;
   console.log(api_url);
   console.log(token);

@@ -12,7 +12,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { User, LogOut, Settings, HelpCircle } from 'lucide-react'
-import { logout } from "../action/auth"
+import { logout } from "../action/clientauth"
 import { useRouter, usePathname } from "next/navigation"
 import path from "path"
 

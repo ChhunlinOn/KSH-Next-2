@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { FaWpforms, FaEdit, FaPlus, FaSearch, FaTrash, FaTimes, FaSave } from 'react-icons/fa';
 import { MdArrowForward } from 'react-icons/md';
 import axios from "axios";
-import { getSessionForClient } from '@/app/action/clientauth';
+import { getSession } from '@/app/action/clientauth';
 
 const Assessment: React.FC = () => {
-  const session = getSessionForClient();
+  const session = getSession();
   const [assessments, setAssessments] = useState<any[]>([]);
   const [editId, setEditId] = useState<number | null>(null);
   const [editValues, setEditValues] = useState({ title: '', url: '' });

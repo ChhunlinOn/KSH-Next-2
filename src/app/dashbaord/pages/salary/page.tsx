@@ -788,9 +788,9 @@ import React, { useState, useEffect } from 'react';
 import BoxSalary from '../../../component/boxSalary';
 import { FaPlus, FaTimes, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
-import { getSessionForClient } from "@/app/action/clientauth";
+import { getSession } from "@/app/action/clientauth";
 
-const session = getSessionForClient();
+const session = getSession();
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const TOKEN = session?.jwt;
@@ -817,8 +817,8 @@ const ResidentList: React.FC = () => {
   
   const fetchResident = async () => {
     try {
-      const response = await fetch(`${API_URL}/beneficiaries?pagination[page]=1&pagination[pageSize]=1000&populate=*&filters[internship_salaries][id][$notNull]=true
-`, {
+      const response = await fetch(`${API_URL}/salary-residents?populate[resident][populate]=*&populate=internship_salaries&pagination[page]=1&pagination[pageSize]=1000`, 
+        {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
         },
@@ -827,13 +827,13 @@ const ResidentList: React.FC = () => {
   
       const transformed = data.data.map((item: any) => ({
         id: item.id,
-        name: item.attributes?.fullname_english || 'No Name',
-        date_of_birth: item.attributes?.date_of_birth || 'N/A',
-        image: item.attributes?.profile_img_url?.data?.attributes?.url,
+        name: item.attributes?.resident?.data?.attributes?.fullname_english || 'No Name',
+        date_of_birth: item.attributes?.resident?.data?.attributes?.date_of_birth || null,
+        image:  item.attributes?.resident?.data?.attributes?.profile_img_url?.data?.attributes?.url,
         dob: item.attributes?.date_of_birth,
       }));
   
-      console.log('Fetched residents:', data.data);
+      console.log('Fetched salary_residents:', data.data);
       setResidents(transformed);
     } catch (error) {
       console.error(error);

@@ -3,10 +3,10 @@ import React, { useState,useEffect } from "react";
 import BoxResident from "../../../component/boxResident";
 import DropdownYearResident from "../../../component/dropDownYearResident";
 import { FaPlus, FaTimes, FaSearch } from "react-icons/fa";
-import { getSessionForClient } from "@/app/action/clientauth";
+import { getSession } from "@/app/action/clientauth";
 
 const ResidentList: React.FC = () => {
-    const session = getSessionForClient();
+    const session = getSession();
   const api_url = process.env.NEXT_PUBLIC_API_URL; 
   const token = session?.jwt;
   console.log("API URL:", api_url);

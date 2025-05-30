@@ -9,8 +9,8 @@ import React, {
 } from "react";
 import dotenv from "dotenv";
 dotenv.config();
-import { getSessionForClient } from "../action/clientauth";
-const session = getSessionForClient();
+import { getSession } from "../action/clientauth";
+const session = getSession();
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const TOKEN = session?.jwt;

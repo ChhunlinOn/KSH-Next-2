@@ -3,12 +3,12 @@ import { FaUser, FaArrowRight } from "react-icons/fa"
 import Link from "next/link"
 import { useState,useEffect } from "react"
 import dotenv from "dotenv"
-import { getSessionForClient } from "@/app/action/clientauth"
+import { getSession } from "@/app/action/clientauth"
 
 const UserListPage = () => {
   dotenv.config();
   const api_url = process.env.NEXT_PUBLIC_API_URL;
-  const session = getSessionForClient();
+  const session = getSession();
   const token = session?.jwt;
   type User = {
   id: number;

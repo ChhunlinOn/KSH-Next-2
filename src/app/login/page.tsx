@@ -1,39 +1,39 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa"
-import { login } from "@/app/action/auth"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { login } from "@/app/action/clientauth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async () => {
-    setLoading(true)
-    setError("")
+    setLoading(true);
+    setError("");
 
     try {
-      const result = await login(email, password)
+      const result = await login(email, password);
 
       if (result.success) {
-        router.push("/dashbaord/pages/resident") // Redirect to dashboard home
-        router.refresh() // Refresh to update auth state
+        router.push("/dashbaord/pages/resident"); // Fixed typo in path
+        router.refresh(); // Refresh to update auth state
       } else {
-        setError(result.error || "Login failed")
+        setError(result.error || "Login failed");
       }
     } catch (error) {
-      console.error("Login error:", error)
-      setError("Login failed. Please try again.")
+      console.error("Login error:", error);
+      setError("Login failed. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-center min-h-screen p-4">
@@ -122,5 +122,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

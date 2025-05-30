@@ -5,7 +5,7 @@ import { FaTimes, FaPlus } from 'react-icons/fa';
 import ResidentBoxInfo from '../../../../../component/residentBoxInfo';
 import { useParams } from 'next/navigation';
 import formatDate from '@/app/component/Formatdate';
-import { getSessionForClient } from '@/app/action/clientauth';
+import { getSession } from '@/app/action/clientauth';
 
 interface CustomInfo {
   name: string;
@@ -13,7 +13,7 @@ interface CustomInfo {
 }
 
 const ResidentDetailPage: React.FC = () => {
-  const session = getSessionForClient();
+  const session = getSession();
     const api_url = process.env.NEXT_PUBLIC_API_URL; 
     const token = session?.jwt;
   const [showAddResidentModal, setShowAddResidentModal] = useState(false);
