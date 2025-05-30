@@ -5,12 +5,12 @@ import ProgramInfoBox from "../../../../../../component/residentChecklist";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
-import { getSessionForClient } from "@/app/action/clientauth";
+import { getSession } from "@/app/action/clientauth";
 import { redirect } from "next/navigation";
 import { useParams } from "next/navigation";
 
 const ResidentChecklist = () => {
-  const session = getSessionForClient();
+  const session = getSession();
   if (!session) redirect("/login");
   const [residentChecklist, setResidentChecklist] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
