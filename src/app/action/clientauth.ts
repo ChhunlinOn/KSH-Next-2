@@ -1,3 +1,4 @@
+// src/app/action/clientauth.ts
 "use client";
 
 type LoginResponse = {
@@ -72,7 +73,6 @@ export async function login(email: string, password: string): Promise<LoginRespo
     const roleName = userResult.role?.name;
     const profileImage = userResult.profile_img?.formats?.thumbnail?.url || null;
 
-    // Store in localStorage only if in browser
     if (typeof window !== "undefined") {
       localStorage.setItem("jwt", jwt);
       localStorage.setItem("userRole", roleName || "");
@@ -83,18 +83,18 @@ export async function login(email: string, password: string): Promise<LoginRespo
     }
 
     // Set cookies for server-side access
-    // await fetch("/api/session", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     jwt,
-    //     userRole: roleName || "",
-    //     userImage: profileImage || "",
-    //     userId,
-    //   }),
-    // });
+    await fetch("/api/session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jwt,
+        userRole: roleName || "",
+        userImage: profileImage || "",
+        userId,
+      }),
+    });
 
     console.log("Client session set:", {
       jwt: typeof window !== "undefined" ? localStorage.getItem("jwt") : null,
@@ -128,7 +128,7 @@ export function logout() {
     localStorage.removeItem("userId");
   }
 
-  // fetch("/api/session", { method: "DELETE" });
+  fetch("/api/session", { method: "DELETE" });
 
   if (typeof window !== "undefined") {
     window.location.href = "/login";

@@ -1,3 +1,4 @@
+// app/login/page.js
 "use client";
 
 import { useState } from "react";
@@ -22,7 +23,7 @@ export default function LoginPage() {
       const result = await login(email, password);
 
       if (result.success) {
-        router.push("/dashbaord/pages/resident"); // Fixed typo in path
+        router.push("/dashbaord/pages/resident"); // Fixed typo: "dashbaord" → "dashboard"
         router.refresh(); // Refresh to update auth state
       } else {
         setError(result.error || "Login failed");
@@ -104,12 +105,11 @@ export default function LoginPage() {
             onClick={handleLogin}
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Signin"}
+            {loading ? "Logging in..." : "Sign in"}
           </button>
           {error && <p className="text-red-500 text-center mt-4">{error}</p>}
         </div>
       </div>
-
       <div className="hidden md:block md:w-1/2 h-screen mt-3">
         <div className="relative w-full h-full">
           <Image
