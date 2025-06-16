@@ -3,7 +3,7 @@ import { residentRouteHandler } from './routes/residentRoutes';
 import { assessmentRouteHandler } from './routes/assessmentRoutes';
 import { scorePointRouteHandler } from './routes/scorepointRoutes'
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function handler(req: NextRequest) {
   const { pathname } = new URL(req.url);
@@ -23,6 +23,9 @@ export async function handler(req: NextRequest) {
     return scorePointRouteHandler(req);
   }
 
-
-  return new Response('Not found', { status: 404 });
+  return NextResponse.json({
+    status: 404,
+    success: false,
+    message: `Route '${pathname}' not found`,
+  }, { status: 404 });
 }

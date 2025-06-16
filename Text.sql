@@ -27,7 +27,6 @@ CREATE TABLE users (
 
 //Residents
 
-
 CREATE TABLE residents (
   id SERIAL PRIMARY KEY,
   fullname_en TEXT,
@@ -45,7 +44,6 @@ CREATE TABLE residents (
 
 
 // Assessment
-
 
 CREATE TABLE assessments (
   id SERIAL PRIMARY KEY,
