@@ -27,3 +27,14 @@ CREATE TABLE users (
   role TEXT,
   profile TEXT
 );
+
+
+//Assessment
+
+CREATE TABLE assessments (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  google_form_url TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
