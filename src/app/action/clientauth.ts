@@ -1,5 +1,4 @@
-// src/app/action/clientauth.ts
-"use client";
+import Cookies from 'js-cookie';
 
 type LoginResponse = {
   success: boolean;
@@ -11,104 +10,45 @@ type LoginResponse = {
   };
 };
 
-type Session = {
-  jwt: string | null;
-  userRole: string | null;
-  userImage: string | null;
-  userId: string | null;
-} | null;
-
 export async function login(email: string, password: string): Promise<LoginResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!apiUrl) {
-    console.error("API URL not defined");
-    return { success: false, error: "API URL not configured" };
-  }
-
   try {
-    const loginData = {
-      identifier: email,
-      password: password,
-    };
-
-    const response = await fetch(`${apiUrl}/auth/local`, {
+    const response = await fetch("/api/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(loginData),
+      body: JSON.stringify({ email, password }),
       cache: "no-store",
-      credentials: "include",
     });
 
-    const result = await response.json();
+    const contentType = response.headers.get("content-type");
+    const result = contentType?.includes("application/json") ? await response.json() : null;
 
-    if (!response.ok) {
-      return {
-        success: false,
-        error: result.error?.message || "Login failed",
-      };
+    if (!response.ok || !result?.success || !result.token || !result.user) {
+      const errorMsg = result?.error || "Login failed";
+      return { success: false, error: errorMsg };
     }
 
-    const jwt = result.jwt;
-    const userId = result.user.id;
+    const token = result.token;
+    const userId = result.user.id.toString();
+    const roleName = result.user.role || null;
 
-    const userResponse = await fetch(`${apiUrl}/users/${userId}?populate=role,profile_img`, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-      cache: "no-store",
-      credentials: "include",
+    // Save JWT securely in cookies
+    Cookies.set("jwt", token, {
+      expires: 7,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Lax",
     });
 
-    const userResult = await userResponse.json();
-
-    if (!userResponse.ok) {
-      return {
-        success: false,
-        error: userResult.error?.message || "Failed to fetch user details",
-      };
-    }
-
-    const roleName = userResult.role?.name;
-    const profileImage = userResult.profile_img?.formats?.thumbnail?.url || null;
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem("jwt", jwt);
-      localStorage.setItem("userRole", roleName || "");
-      localStorage.setItem("userId", userId.toString());
-      if (profileImage) {
-        localStorage.setItem("userImage", profileImage);
-      }
-    }
-
-    // Set cookies for server-side access
-    await fetch("/api/session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        jwt,
-        userRole: roleName || "",
-        userImage: profileImage || "",
-        userId,
-      }),
-    });
-
-    console.log("Client session set:", {
-      jwt: typeof window !== "undefined" ? localStorage.getItem("jwt") : null,
-      userRole: typeof window !== "undefined" ? localStorage.getItem("userRole") : null,
-      userImage: typeof window !== "undefined" ? localStorage.getItem("userImage") : null,
-      userId: typeof window !== "undefined" ? localStorage.getItem("userId") : null,
-    });
+    Cookies.set("userId", userId);
+    if (roleName) Cookies.set("userRole", roleName);
 
     return {
       success: true,
       user: {
         id: userId,
         role: roleName,
-        profileImage,
+        profileImage: null, // not returned in the new response
       },
     };
   } catch (error) {
@@ -119,23 +59,15 @@ export async function login(email: string, password: string): Promise<LoginRespo
     };
   }
 }
+type Session = {
+  jwt: string | null;
+  userRole: string | null;
+  userImage: string | null;
+  userId: string | null;
+} | null;
 
-export function logout() {
-  if (typeof window !== "undefined") {
-    localStorage.removeItem("jwt");
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("userImage");
-    localStorage.removeItem("userId");
-  }
 
-  fetch("/api/session", { method: "DELETE" });
-
-  if (typeof window !== "undefined") {
-    window.location.href = "/login";
-  }
-}
-
-export function getSession(): Session {
+export function getSession() : Session{
   if (typeof window === "undefined") {
     return null;
   }
