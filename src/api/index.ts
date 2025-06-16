@@ -1,6 +1,8 @@
 import { userRouteHandler } from './routes/userRoutes';
 import { residentRouteHandler } from './routes/residentRoutes';
 import { assessmentRouteHandler } from './routes/assessmentRoutes';
+import { scorePointRouteHandler } from './routes/scorepointRoutes'
+
 import { NextRequest } from 'next/server';
 
 export async function handler(req: NextRequest) {
@@ -16,6 +18,9 @@ export async function handler(req: NextRequest) {
 
     if (pathname.startsWith('/api/assessments')) {
     return assessmentRouteHandler(req);
+  }
+      if (pathname.startsWith('/api/scorepoints')) {
+    return scorePointRouteHandler(req);
   }
 
 
