@@ -53,10 +53,10 @@ export async function userRouteHandler(req: NextRequest) {
 
   // POST /api/users/create → create user (protected)
   if (method === 'POST' && lastSegment === 'create') {
-    const user = await verifyJwt(req);
-    if (!user) {
-      return unauthorizedResponse("No JWT provided or invalid token");
-    }
+    // const user = await verifyJwt(req);
+    // if (!user) {
+    //   return unauthorizedResponse("No JWT provided or invalid token");
+    // }
     return createUser(req);
   }
 
