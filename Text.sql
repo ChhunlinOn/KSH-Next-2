@@ -1,4 +1,4 @@
-//ScorePoint
+--ScorePoint
 
 CREATE TABLE score_points (
   id SERIAL PRIMARY KEY,
@@ -12,7 +12,7 @@ CREATE TABLE score_points (
 
 
 
-//User 
+--User 
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -25,7 +25,7 @@ CREATE TABLE users (
 );
 
 
-//Residents
+--Residents
 
 CREATE TABLE residents (
   id SERIAL PRIMARY KEY,
@@ -43,7 +43,7 @@ CREATE TABLE residents (
 );
 
 
-// Assessment
+-- Assessment
 
 CREATE TABLE assessments (
   id SERIAL PRIMARY KEY,
@@ -51,5 +51,40 @@ CREATE TABLE assessments (
   google_form_url TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
+);
+
+
+-- Resident Medical
+
+CREATE TABLE resident_medicals (
+  id SERIAL PRIMARY KEY,
+  medical_treatment TEXT NOT NULL,
+  doctor TEXT NOT NULL,
+  treatment_date DATE NOT NULL,
+  specialist_doctor_comment TEXT,
+  next_appointment TIMESTAMPTZ,
+  next_appointment_remark TEXT,
+  require_to_use BOOLEAN DEFAULT FALSE,
+  resident_id INTEGER NOT NULL REFERENCES residents(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+
+-- Create table: medical_comments
+CREATE TABLE medical_comments (
+  id SERIAL PRIMARY KEY,
+  resident_medical_id INTEGER NOT NULL REFERENCES resident_medicals(id) ON DELETE CASCADE,
+  comment TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create table: medical_url_drive
+CREATE TABLE medical_url_drives (
+  id SERIAL PRIMARY KEY,
+  resident_medical_id INTEGER NOT NULL REFERENCES resident_medicals(id) ON DELETE CASCADE,
+  drive_url TEXT NOT NULL,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

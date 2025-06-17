@@ -1,8 +1,10 @@
 import { userRouteHandler } from './routes/userRoutes';
 import { residentRouteHandler } from './routes/residentRoutes';
 import { assessmentRouteHandler } from './routes/assessmentRoutes';
-import { scorePointRouteHandler } from './routes/scorepointRoutes'
-
+import { scorePointRouteHandler } from './routes/scorepointRoutes';
+import  {residentMedicalRouteHandler} from './routes/residentmedicalRoutes'
+import {medicalCommentRouteHandler} from './routes/medicalcommentRoutes';
+import {medicalDriveUrlRouteHandler} from './routes/medicaldriveurlRoutes'
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function handler(req: NextRequest) {
@@ -23,9 +25,20 @@ export async function handler(req: NextRequest) {
     return scorePointRouteHandler(req);
   }
 
+      if (pathname.startsWith('/api/residentmedicals')) {
+    return residentMedicalRouteHandler(req);
+  }
+        if (pathname.startsWith('/api/medicalcomments')) {
+    return medicalCommentRouteHandler(req);
+  }
+        if (pathname.startsWith('/api/medicaldriveurls')) {
+    return medicalDriveUrlRouteHandler(req);
+  }
   return NextResponse.json({
     status: 404,
     success: false,
     message: `Route '${pathname}' not found`,
   }, { status: 404 });
+
+  
 }
