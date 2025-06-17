@@ -99,3 +99,29 @@ CREATE TABLE program_levels (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+-- Program Activity
+
+CREATE TABLE program_activities (
+  id SERIAL PRIMARY KEY,
+  program_activity_name TEXT NOT NULL,
+  gender TEXT DEFAULT 'All',
+  img_url TEXT,
+  description TEXT,
+  program_type INTEGER REFERENCES program_types(id) ON DELETE SET NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+
+-- Program Type 
+CREATE TABLE program_types (
+  id SERIAL PRIMARY KEY,
+  program_type_name TEXT NOT NULL,
+  description TEXT,
+  img_url TEXT,  
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
