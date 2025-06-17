@@ -5,6 +5,7 @@ import { scorePointRouteHandler } from './routes/scorepointRoutes';
 import  {residentMedicalRouteHandler} from './routes/residentmedicalRoutes'
 import {medicalCommentRouteHandler} from './routes/medicalcommentRoutes';
 import {medicalDriveUrlRouteHandler} from './routes/medicaldriveurlRoutes'
+import {programLevelRouteHandler} from './routes/programlevelRoutes'
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function handler(req: NextRequest) {
@@ -33,6 +34,9 @@ export async function handler(req: NextRequest) {
   }
         if (pathname.startsWith('/api/medicaldriveurls')) {
     return medicalDriveUrlRouteHandler(req);
+  }
+          if (pathname.startsWith('/api/programlevels')) {
+    return programLevelRouteHandler(req);
   }
   return NextResponse.json({
     status: 404,
