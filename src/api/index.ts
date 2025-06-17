@@ -2,11 +2,13 @@ import { userRouteHandler } from './routes/userRoutes';
 import { residentRouteHandler } from './routes/residentRoutes';
 import { assessmentRouteHandler } from './routes/assessmentRoutes';
 import { scorePointRouteHandler } from './routes/scorepointRoutes';
-import  {residentMedicalRouteHandler} from './routes/residentmedicalRoutes'
+import  {residentMedicalRouteHandler} from './routes/residentmedicalRoutes';
 import {medicalCommentRouteHandler} from './routes/medicalcommentRoutes';
-import {medicalDriveUrlRouteHandler} from './routes/medicaldriveurlRoutes'
-import {programLevelRouteHandler} from './routes/programlevelRoutes'
+import {medicalDriveUrlRouteHandler} from './routes/medicaldriveurlRoutes';
+import {programLevelRouteHandler} from './routes/programlevelRoutes';
+import { programActivityRouteHandler} from './routes/programactivityRoutes';
 import { NextRequest, NextResponse } from 'next/server';
+
 
 export async function handler(req: NextRequest) {
   const { pathname } = new URL(req.url);
@@ -37,6 +39,10 @@ export async function handler(req: NextRequest) {
   }
           if (pathname.startsWith('/api/programlevels')) {
     return programLevelRouteHandler(req);
+  }
+
+            if (pathname.startsWith('/api/programactivitys')) {
+    return programActivityRouteHandler(req);
   }
   return NextResponse.json({
     status: 404,
