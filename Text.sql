@@ -88,3 +88,14 @@ CREATE TABLE medical_url_drives (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
+-- Program Level 
+
+CREATE TABLE program_levels (
+  id SERIAL PRIMARY KEY,
+  program_level_name VARCHAR(100) NOT NULL,
+  program_level_order INTEGER NOT NULL,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
