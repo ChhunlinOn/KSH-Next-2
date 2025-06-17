@@ -7,6 +7,7 @@ import {medicalCommentRouteHandler} from './routes/medicalcommentRoutes';
 import {medicalDriveUrlRouteHandler} from './routes/medicaldriveurlRoutes';
 import {programLevelRouteHandler} from './routes/programlevelRoutes';
 import { programActivityRouteHandler} from './routes/programactivityRoutes';
+import { programTypeRouteHandler} from './routes/programtypeRoutes';
 import { NextRequest, NextResponse } from 'next/server';
 
 
@@ -43,6 +44,10 @@ export async function handler(req: NextRequest) {
 
             if (pathname.startsWith('/api/programactivitys')) {
     return programActivityRouteHandler(req);
+  }
+
+            if (pathname.startsWith('/api/programtypes')) {
+    return programTypeRouteHandler(req);
   }
   return NextResponse.json({
     status: 404,
