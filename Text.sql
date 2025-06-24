@@ -125,3 +125,17 @@ CREATE TABLE program_types (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
+
+-- Resident Checklist
+
+CREATE TABLE resident_checklists (
+  id SERIAL PRIMARY KEY,
+  resident INTEGER REFERENCES residents(id),
+  program_activity INTEGER REFERENCES program_activities(id),
+  score_point INTEGER REFERENCES score_points(id),
+  checklist_date DATE NOT NULL,
+  checklist_time TIME,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);

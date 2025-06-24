@@ -8,6 +8,7 @@ import {medicalDriveUrlRouteHandler} from './routes/medicaldriveurlRoutes';
 import {programLevelRouteHandler} from './routes/programlevelRoutes';
 import { programActivityRouteHandler} from './routes/programactivityRoutes';
 import { programTypeRouteHandler} from './routes/programtypeRoutes';
+import {residentChecklistRouteHandler} from './routes/residentchecklistRoutes';
 import { NextRequest, NextResponse } from 'next/server';
 
 
@@ -48,6 +49,9 @@ export async function handler(req: NextRequest) {
 
             if (pathname.startsWith('/api/programtypes')) {
     return programTypeRouteHandler(req);
+  }
+              if (pathname.startsWith('/api/residentchecklists')) {
+    return residentChecklistRouteHandler(req);
   }
   return NextResponse.json({
     status: 404,
